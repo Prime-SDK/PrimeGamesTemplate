@@ -103,12 +103,12 @@ img {
 
     #unity-progress-bar-empty {
         width: 128px;
-        background: url('../img/progress_empty_128.png') no-repeat center;
+        background: url('progress_empty_128.png') no-repeat center;
     }
 
     #unity-progress-bar-full {
         height: 18px;
-        background: url('../img/progress_full_128.png') no-repeat center;
+        background: url('progress_full_128.png') no-repeat center;
     }
 
 }
