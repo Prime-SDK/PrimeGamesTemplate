@@ -150,23 +150,23 @@ const unityApp = {
                 progressBarFull.style.width = 100 * progress + "%";
             }).then((unityInstance) => {
                 loadingBar.style.display = "none";
+
+                #if SHOW_DIAGNOSTICS
+                // Position the diagnostics icon in the corner on the canvas.
+                const diagnostics_icon = document.getElementById("diagnostics-icon");
+                diagnostics_icon.onclick = () => {
+                    unityDiagnostics.openDiagnosticsDiv(unityInstance.GetMetricsInfo);
+                };
+                diagnostics_icon.style.position = "fixed";
+                diagnostics_icon.style.bottom = "10px";
+                diagnostics_icon.style.right = "0px";
+                canvas.after(diagnostics_icon);
+                #endif
             }).catch((message) => {
                 alert(message);
             });
         };
         document.body.appendChild(script);
-
-        #if SHOW_DIAGNOSTICS
-        // Position the diagnostics icon in the corner on the canvas.
-        const diagnostics_icon = document.getElementById("diagnostics-icon");
-        diagnostics_icon.onclick = () => {
-            unityDiagnostics.openDiagnosticsDiv(unityInstance.GetMetricsInfo);
-        };
-        diagnostics_icon.style.position = "fixed";
-        diagnostics_icon.style.bottom = "10px";
-        diagnostics_icon.style.right = "0px";
-        canvas.after(diagnostics_icon);
-        #endif
     },
 
     isEmpty: function (value) {
