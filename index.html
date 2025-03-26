@@ -13,6 +13,7 @@
     <link rel="manifest" href="manifest.webmanifest">
 
     <!-- Memory diagnostics stylesheet -->
+    <script src="TemplateData/diagnostics.js"></script>
     <link rel="stylesheet" href="TemplateData/diagnostics.css">
 </head>
 <body>
@@ -29,13 +30,7 @@
     </div>
 
     <!-- Memory diagnostics -->
-    <script type="text/javascript">
-        const diagnosticsIcon = document.createElement('img');
-        diagnosticsIcon.id = 'diagnostics-icon';
-        diagnosticsIcon.src = 'TemplateData/diagnostics.png';
-        document.body.appendChild(diagnosticsIcon);
-    </script>
-    <script src="TemplateData/diagnostics.js"></script>
+    <img id="diagnostics-icon" src="TemplateData/webmemd-icon.png">
 
     <script>
         const container = document.querySelector("#unity-container");
@@ -97,13 +92,26 @@
         // the canvas DOM size and WebGL render target sizes yourself.
         // config.matchWebGLToCanvasSize = false;
 
-        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // If you would like all file writes inside Unity Application.persistentDataPath
+        // directory to automatically persist so that the contents are remembered when
+        // the user revisits the site the next time, uncomment the following line:
+        // config.autoSyncPersistentDataPath = true;
+        // This autosyncing is currently not the default behavior to avoid regressing
+        // existing user projects that might rely on the earlier manual
+        // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
+        // expected to change.
+
+        // To lower canvas resolution on mobile devices to gain some
+        // performance, uncomment the following line:
+        // config.devicePixelRatio = 1;
+
+        /*if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
             // Mobile device style: fill the whole browser client area with the game canvas:
             const meta = document.createElement('meta');
             meta.name = 'viewport';
             meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
             document.getElementsByTagName('head')[0].appendChild(meta);
-        }
+        }*/
 
         #if BACKGROUND_FILENAME
             canvas.style.background = "url('" + buildUrl + "/{{{ BACKGROUND_FILENAME.replace(/'/g, '%27') }}}') center / cover";
@@ -117,11 +125,22 @@
                 progressBarFull.style.width = 100 * progress + "%";
             }).then((unityInstance) => {
                 loadingBar.style.display = "none";
+
+                document.getElementById("diagnostics-icon").onclick = () => {
+                    unityDiagnostics.openDiagnosticsDiv(unityInstance.GetMetricsInfo);
+                };
             }).catch((message) => {
                 alert(message);
             });
         };
         document.body.appendChild(script);
+
+        // Position the diagnostics icon in the corner on the canvas
+        const diagnostics_icon = document.getElementById("diagnostics-icon");
+        diagnostics_icon.style.position = "fixed";
+        diagnostics_icon.style.bottom = "10px";
+        diagnostics_icon.style.right = "0px";
+        canvas.after(diagnostics_icon);
     </script>
 </body>
 </html>
