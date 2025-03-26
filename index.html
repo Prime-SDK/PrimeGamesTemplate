@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!-- Content encoding -->
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=yes" />
+
+    <!-- Page info and stylesheets -->
     <title>{{{ PRODUCT_NAME }}}</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
     <link rel="manifest" href="manifest.webmanifest">
+
+    <!-- Memory diagnostics stylesheet -->
+    <link rel="stylesheet" href="TemplateData/diagnostics.css">
 </head>
 <body>
+    <!-- Unity canvas -->
     <div id="unity-container">
         <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}} tabindex="-1"></canvas>
         <div id="unity-loading-bar">
@@ -19,6 +27,16 @@
         </div>
         <div id="unity-warning"> </div>
     </div>
+
+    <!-- Memory diagnostics -->
+    <script type="text/javascript">
+        const diagnosticsIcon = document.createElement('img');
+        diagnosticsIcon.id = 'diagnostics-icon';
+        diagnosticsIcon.src = 'TemplateData/diagnostics.png';
+        document.body.appendChild(diagnosticsIcon);
+    </script>
+    <script src="TemplateData/diagnostics.js"></script>
+
     <script>
         const container = document.querySelector("#unity-container");
         const canvas = document.querySelector("#unity-canvas");
