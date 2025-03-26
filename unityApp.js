@@ -3,11 +3,13 @@ const unityApp = {
     tryLockAspectRatio() {
         const mobileAspectRatioInput = "{{{ MOBILE_ASPECT_RATIO }}}";
         const isMobileLocked = !this.isEmpty(mobileAspectRatioInput);
-        const mobileAspectRatio = isMobileLocked ? parseFloat(mobileAspectRatioInput) : 0.0;
+        const mobileAspectRatio = isMobileLocked ? this.toNumber(mobileAspectRatioInput) : 1.0;
+        console.log("Mobile aspect ratio", mobileAspectRatioInput, isMobileLocked, mobileAspectRatio);
 
         const desktopAspectRatioInput = "{{{ DESKTOP_ASPECT_RATIO }}}";
         const isDesktopLocked = !this.isEmpty(desktopAspectRatioInput);
-        const desktopAspectRatio = isDesktopLocked ? parseFloat(desktopAspectRatioInput) : 0.0;
+        const desktopAspectRatio = isDesktopLocked ? this.toNumber(desktopAspectRatioInput) : 1.0;
+        console.log("Desktop aspect ratio", desktopAspectRatioInput, isDesktopLocked, desktopAspectRatio);
 
         const container = document.querySelector("#unity-container");
         const canvas = document.querySelector("#unity-canvas");
@@ -77,7 +79,6 @@ const unityApp = {
         const canvas = document.querySelector("#unity-canvas");
         const loadingBar = document.querySelector("#unity-loading-bar");
         const progressBarFull = document.querySelector("#unity-progress-bar-full");
-        const warningBanner = document.querySelector("#unity-warning");
 
         const buildUrl = "Build";
         const loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
@@ -177,11 +178,42 @@ const unityApp = {
     },
 
     isNumber: function (value) {
-        return !isNaN(value);
+        return typeof value === 'number' && !isNaN(value);
     },
 
     toNumber: function (value) {
-        return Number(value);
+        function handleMathExpression(str) {
+            const mathMatch = str.match(/^(\d*\.?\d+)\s*([+\-*/])\s*(\d*\.?\d+)$/);
+            if (!mathMatch) return null;
+
+            const a = parseFloat(mathMatch[1]);
+            const operator = mathMatch[2];
+            const b = parseFloat(mathMatch[3]);
+
+            const operators = {
+                '+': function (a, b) { return a + b; },
+                '-': function (a, b) { return a - b; },
+                '*': function (a, b) { return a * b; },
+                '/': function (a, b) { return b !== 0 ? a / b : NaN; }
+            };
+            return operators[operator](a, b);
+        }
+
+        function convertToNumber(str) {
+            const num = parseFloat(str);
+            return isNaN(num) ? 0 : num;
+        }
+
+        // Handle basic type checks first.
+        if (this.isNumber(value)) return value;
+        if (this.isEmpty(value)) return 0;
+
+        // Convert to string and handle empty case.
+        var str = String(value).trim();
+        if (str === '') return 0;
+
+        // Try math expression or simple number conversion.
+        return handleMathExpression(str) || convertToNumber(str);
     },
 
 };
