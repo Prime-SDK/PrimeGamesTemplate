@@ -1,5 +1,84 @@
 const unityApp = {
 
+    tryRotationLock() {
+        const PORTRAIT_ONLY = "{{{ PORTRAIT_ONLY }}}";
+        let isPortraitLocked = false;
+        if (!unityApp.isEmpty(PORTRAIT_ONLY)) {
+            isPortraitLocked = unityApp.toBoolean(PORTRAIT_ONLY);
+        }
+        console.log("Portrait only", PORTRAIT_ONLY, isPortraitLocked);
+
+        const LANDSCAPE_ONLY = "{{{ LANDSCAPE_ONLY }}}";
+        let isLandscapeLocked = false;
+        if (!unityApp.isEmpty(LANDSCAPE_ONLY)) {
+            isLandscapeLocked = unityApp.toBoolean(LANDSCAPE_ONLY);
+        }
+        console.log("Landscape only", LANDSCAPE_ONLY, isLandscapeLocked);
+
+        if (isPortraitLocked && isLandscapeLocked) {
+            throw new Error("Both portrait and landscape lock cannot be enabled at the same time.");
+        }
+
+        const root = document.createElement("div");
+
+        // Stretch to full screen.
+        root.style.background = 'rgb(10, 10, 10, 0.7)';
+        root.style.display = 'flex';
+        root.style.position = 'fixed';
+        root.style.top = '0';
+        root.style.left = '0';
+        root.style.width = '100%';
+        root.style.height = '100%';
+
+        // Create blur background effect.
+        root.style.webkitBackfaceVisibility = 'hidden';
+        root.style.webkitPerspective = '1000';
+        root.style.webkitTransform = 'translate3d(0,0,0)';
+        root.style.webkitTransform = 'translateZ(0)';
+        root.style.backfaceVisibility = 'hidden';
+        root.style.perspective = '1000';
+        root.style.transform = 'translate3d(0,0,0)';
+        root.style.transform = 'translateZ(0)';
+        root.style.backdropFilter = 'blur(10px)';
+
+        // Create intuitive image instruction for the user.
+        const image = document.createElement('img');
+        if (isPortraitLocked) {
+            image.src = 'TemplateData/portrait-only.png';
+        }
+        else if (isLandscapeLocked) {
+            image.src = 'TemplateData/landscape-only.png';
+        }
+        image.style.display = 'flex';
+        image.style.width = '100px';
+        image.style.height = '100px';
+        image.style.margin = 'auto';
+        root.appendChild(image);
+
+        document.body.appendChild(root);
+
+        function updateRotationLock() {
+            if (isPortraitLocked && window.innerHeight > window.innerWidth) {
+                root.style.display = 'none';
+            }
+            else if (isLandscapeLocked && window.innerHeight < window.innerWidth) {
+                root.style.display = 'none';
+            }
+            else {
+                root.style.display = unityApp.isMobile() ? 'flex' : 'none';
+            }
+        }
+
+        // Subscribe to window and document events.
+        window.addEventListener("load", updateRotationLock);
+        window.addEventListener("resize", updateRotationLock);
+        document.addEventListener("readystatechange", updateRotationLock);
+        document.addEventListener("DOMContentLoaded", updateRotationLock);
+
+        // Update rotation lock on start.
+        updateRotationLock();
+    },
+
     tryLockAspectRatio() {
         const mobileAspectRatioInput = "{{{ MOBILE_ASPECT_RATIO }}}";
         const isMobileLocked = !this.isEmpty(mobileAspectRatioInput);
@@ -43,25 +122,18 @@ const unityApp = {
             }
         }
 
-        function applyAspectRatio(value) {
-            resetAspectRatio();
-            if (value > 0.0) {
-                // Recalculate aspect ratio.
-                recalculateAspectRatio(value);
-            }
-        }
-
         function updateAspectRatio() {
-            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            resetAspectRatio();
+            if (unityApp.isMobile()) {
                 // Mobile
                 if (isMobileLocked) {
-                    applyAspectRatio(mobileAspectRatio);
+                    recalculateAspectRatio(mobileAspectRatio);
                 }
             }
             else {
                 // Desktop
                 if (isDesktopLocked) {
-                    applyAspectRatio(desktopAspectRatio);
+                    recalculateAspectRatio(desktopAspectRatio);
                 }
             }
             centerCanvas();
@@ -72,6 +144,9 @@ const unityApp = {
         window.addEventListener("resize", updateAspectRatio);
         document.addEventListener("readystatechange", updateAspectRatio);
         document.addEventListener("DOMContentLoaded", updateAspectRatio);
+
+        // Update aspect ratio on start.
+        updateAspectRatio();
     },
 
     startLoading: function () {
@@ -169,6 +244,10 @@ const unityApp = {
         document.body.appendChild(script);
     },
 
+    isMobile: function () {
+        return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    },
+
     isEmpty: function (value) {
         return value === undefined || value === null || value === "";
     },
@@ -217,6 +296,9 @@ const unityApp = {
     },
 
 };
+
+// Lock rotation.
+unityApp.tryRotationLock();
 
 // Lock aspect ratio.
 unityApp.tryLockAspectRatio();

@@ -23,8 +23,6 @@ html, body {
     /* BACKGROUND BEHIND UNITY CONTAINER */
     background-position: center center;
     background-size: cover;
-    /* PREVENT CONTEXT MENU */
-    pointer-events: none;
 }
 
 img {
