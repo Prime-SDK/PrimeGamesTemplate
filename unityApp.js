@@ -1,5 +1,77 @@
 const unityApp = {
 
+    tryLockAspectRatio() {
+        const mobileAspectRatioInput = "{{{ MOBILE_ASPECT_RATIO }}}";
+        const isMobileLocked = !this.isEmpty(mobileAspectRatioInput);
+        const mobileAspectRatio = isMobileLocked ? parseFloat(mobileAspectRatioInput) : 0.0;
+
+        const desktopAspectRatioInput = "{{{ DESKTOP_ASPECT_RATIO }}}";
+        const isDesktopLocked = !this.isEmpty(desktopAspectRatioInput);
+        const desktopAspectRatio = isDesktopLocked ? parseFloat(desktopAspectRatioInput) : 0.0;
+
+        const container = document.querySelector("#unity-container");
+        const canvas = document.querySelector("#unity-canvas");
+
+        function centerCanvas() {
+            canvas.style.margin = "auto";
+            canvas.style.top = "0";
+            canvas.style.left = "0";
+            canvas.style.bottom = "0";
+            canvas.style.right = "0";
+        }
+
+        function resetAspectRatio() {
+            canvas.style.width = "100%";
+            canvas.style.height = "100%";
+            centerCanvas();
+        }
+
+        function recalculateAspectRatio(aspectRatio) {
+            let containerWidth = container.clientWidth;
+            let containerHeight = container.clientHeight;
+
+            // Apply aspect ratio lock with pixel-perfect size.
+            if (containerWidth / containerHeight > aspectRatio) {
+                canvas.style.width = Math.floor(containerHeight * aspectRatio) + "px";
+                canvas.style.height = "100%";
+            }
+            else {
+                canvas.style.width = "100%";
+                canvas.style.height = Math.floor(containerWidth / aspectRatio) + "px";
+            }
+        }
+
+        function applyAspectRatio(value) {
+            resetAspectRatio();
+            if (value > 0.0) {
+                // Recalculate aspect ratio.
+                recalculateAspectRatio(value);
+            }
+        }
+
+        function updateAspectRatio() {
+            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                // Mobile
+                if (isMobileLocked) {
+                    applyAspectRatio(mobileAspectRatio);
+                }
+            }
+            else {
+                // Desktop
+                if (isDesktopLocked) {
+                    applyAspectRatio(desktopAspectRatio);
+                }
+            }
+            centerCanvas();
+        }
+
+        // Subscribe to window and document events.
+        window.addEventListener("load", updateAspectRatio);
+        window.addEventListener("resize", updateAspectRatio);
+        document.addEventListener("readystatechange", updateAspectRatio);
+        document.addEventListener("DOMContentLoaded", updateAspectRatio);
+    },
+
     startLoading: function () {
         const container = document.querySelector("#unity-container");
         const canvas = document.querySelector("#unity-canvas");
@@ -113,6 +185,9 @@ const unityApp = {
     },
 
 };
+
+// Lock aspect ratio.
+unityApp.tryLockAspectRatio();
 
 // Automatically start after script is loaded.
 unityApp.startLoading();
