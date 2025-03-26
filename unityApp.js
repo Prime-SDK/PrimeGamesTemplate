@@ -232,9 +232,6 @@ const unityApp = {
                 diagnostics_icon.onclick = () => {
                     unityDiagnostics.openDiagnosticsDiv(unityInstance.GetMetricsInfo);
                 };
-                diagnostics_icon.style.position = "fixed";
-                diagnostics_icon.style.bottom = "10px";
-                diagnostics_icon.style.right = "0px";
                 canvas.after(diagnostics_icon);
                 #endif
             }).catch((message) => {

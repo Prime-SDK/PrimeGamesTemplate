@@ -9,7 +9,7 @@
 
 html, body {
     height: 100%;
-    background-color: #181a33;
+    background-color: #93a5ee;
     /* REMOVE SCROLL BAR */
     overflow: hidden;
     /* REMOVE IOS LONG TAP */
@@ -23,6 +23,7 @@ html, body {
     /* BACKGROUND BEHIND UNITY CONTAINER */
     background-position: center center;
     background-size: cover;
+    background-image: url('../gameBackground.png');
 }
 
 img {
@@ -42,6 +43,12 @@ img {
     width: 100%;
     height: 100%;
     background: none;
+}
+
+#diagnostics-icon {
+    position: fixed;
+    bottom: 10px;
+    right: 0px;
 }
 
 #diagnostics-icon, #diagnostics-overlay * {
@@ -74,6 +81,7 @@ img {
     background-position: center center;
     background-size: cover;
     background-image: url('../gameIcon.png');
+    border-radius: 5px;
 }
 
 #unity-progress-bar-empty {
