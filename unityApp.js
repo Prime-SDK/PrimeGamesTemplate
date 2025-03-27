@@ -1,5 +1,23 @@
 const unityApp = {
 
+    applyCommonFixes: function () {
+        // Disable unwanted page scroll.
+        window.addEventListener("wheel", (event) => event.preventDefault(), {
+            passive: false,
+        });
+
+        // Disable unwanted key events.
+        window.addEventListener("keydown", (event) => {
+            if (["ArrowUp", "ArrowDown"].includes(event.key)) {
+                event.preventDefault();
+            }
+        });
+
+        // Disable context menu appearing after right click outside of the unity canvas.
+        window.addEventListener('contextmenu', (event) => event.preventDefault());
+        document.addEventListener('contextmenu', (event) => event.preventDefault());
+    },
+
     tryRotationLock() {
         const PORTRAIT_ONLY = "{{{ PORTRAIT_ONLY }}}";
         let isPortraitLocked = false;
@@ -293,6 +311,9 @@ const unityApp = {
     },
 
 };
+
+// Apply common fixes.
+unityApp.applyCommonFixes();
 
 // Lock rotation.
 unityApp.tryRotationLock();
