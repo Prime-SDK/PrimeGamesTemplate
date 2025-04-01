@@ -76,15 +76,20 @@ const unityApp = {
         document.body.appendChild(root);
 
         function updateRotationLock() {
-            if (isPortraitLocked && window.innerHeight > window.innerWidth) {
-                root.style.display = 'none';
+            let display = 'none';
+            if (unityApp.isMobile()) {
+                if (isPortraitLocked && isLandscapeLocked) {
+                    root.style.display = display;
+                    return;
+                }
+                if (isPortraitLocked) {
+                    display = window.innerHeight > window.innerWidth ? 'flex' : 'none';
+                }
+                else if (isLandscapeLocked) {
+                    display = window.innerHeight < window.innerWidth ? 'flex' : 'none';
+                }
             }
-            else if (isLandscapeLocked && window.innerHeight < window.innerWidth) {
-                root.style.display = 'none';
-            }
-            else {
-                root.style.display = unityApp.isMobile() ? 'flex' : 'none';
-            }
+            root.style.display = display;
         }
 
         // Subscribe to window and document events.
