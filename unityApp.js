@@ -83,10 +83,10 @@ const unityApp = {
                     return;
                 }
                 if (isPortraitLocked) {
-                    display = window.innerHeight > window.innerWidth ? 'flex' : 'none';
+                    display = window.innerHeight < window.innerWidth ? 'flex' : 'none';
                 }
                 else if (isLandscapeLocked) {
-                    display = window.innerHeight < window.innerWidth ? 'flex' : 'none';
+                    display = window.innerHeight > window.innerWidth ? 'flex' : 'none';
                 }
             }
             root.style.display = display;
