@@ -24,14 +24,14 @@ const unityApp = {
         if (!unityApp.isEmpty(PORTRAIT_ONLY)) {
             isPortraitLocked = unityApp.toBoolean(PORTRAIT_ONLY);
         }
-        console.log("Portrait only", PORTRAIT_ONLY, isPortraitLocked);
+        console.log("isPortraitLocked", PORTRAIT_ONLY, isPortraitLocked);
 
         const LANDSCAPE_ONLY = "{{{ LANDSCAPE_ONLY }}}";
         let isLandscapeLocked = false;
         if (!unityApp.isEmpty(LANDSCAPE_ONLY)) {
             isLandscapeLocked = unityApp.toBoolean(LANDSCAPE_ONLY);
         }
-        console.log("Landscape only", LANDSCAPE_ONLY, isLandscapeLocked);
+        console.log("isLandscapeLocked", LANDSCAPE_ONLY, isLandscapeLocked);
 
         if (isPortraitLocked && isLandscapeLocked) {
             throw new Error("Both portrait and landscape lock cannot be enabled at the same time.");
@@ -106,12 +106,12 @@ const unityApp = {
         const mobileAspectRatioInput = "{{{ MOBILE_ASPECT_RATIO }}}";
         const isMobileLocked = !this.isEmpty(mobileAspectRatioInput);
         const mobileAspectRatio = isMobileLocked ? this.toNumber(mobileAspectRatioInput) : 1.0;
-        console.log("Mobile aspect ratio", mobileAspectRatioInput, isMobileLocked, mobileAspectRatio);
+        console.log("mobileAspectRatio", mobileAspectRatioInput, isMobileLocked, mobileAspectRatio);
 
         const desktopAspectRatioInput = "{{{ DESKTOP_ASPECT_RATIO }}}";
         const isDesktopLocked = !this.isEmpty(desktopAspectRatioInput);
         const desktopAspectRatio = isDesktopLocked ? this.toNumber(desktopAspectRatioInput) : 1.0;
-        console.log("Desktop aspect ratio", desktopAspectRatioInput, isDesktopLocked, desktopAspectRatio);
+        console.log("desktopAspectRatio", desktopAspectRatioInput, isDesktopLocked, desktopAspectRatio);
 
         const container = document.querySelector("#unity-container");
         const canvas = document.querySelector("#unity-canvas");
@@ -173,7 +173,6 @@ const unityApp = {
     },
 
     startLoading: function () {
-        const container = document.querySelector("#unity-container");
         const canvas = document.querySelector("#unity-canvas");
         const loadingBar = document.querySelector("#unity-loading-bar");
         const progressBarFull = document.querySelector("#unity-progress-bar-full");
@@ -217,6 +216,7 @@ const unityApp = {
         // happening inside the engine, and you would instead like to size up
         // the canvas DOM size and WebGL render target sizes yourself.
         const matchWebGLToCanvasSize = "{{{ MATCH_WEBGL_TO_CANVAS_SIZE }}}";
+        console.log("matchWebGLToCanvasSize", matchWebGLToCanvasSize);
         if (!this.isEmpty(matchWebGLToCanvasSize)) {
             config.matchWebGLToCanvasSize = this.toBoolean(matchWebGLToCanvasSize);
         }
@@ -225,6 +225,7 @@ const unityApp = {
         // directory to automatically persist so that the contents are remembered when
         // the user revisits the site the next time, uncomment the following line:
         const autoSyncPersistentDataPath = "{{{ AUTO_SYNC_PERSISTENT_DATA_PATH }}}";
+        console.log("autoSyncPersistentDataPath", autoSyncPersistentDataPath);
         if (!this.isEmpty(autoSyncPersistentDataPath)) {
             config.autoSyncPersistentDataPath = this.toBoolean(autoSyncPersistentDataPath);
         }
@@ -236,8 +237,9 @@ const unityApp = {
         // To lower canvas resolution on mobile devices to gain some
         // performance, uncomment the following line:
         const devicePixelRatio = this.toNumber("{{{ DEVICE_PIXEL_RATIO }}}");
+        console.log("devicePixelRatio", devicePixelRatio);
         if (this.isNumber(devicePixelRatio)) {
-            config.devicePixelRatio = devicePixelRatio;
+            config.devicePixelRatio = this.toNumber(devicePixelRatio);
         }
 
         loadingBar.style.display = "block";
