@@ -103,15 +103,22 @@ const unityApp = {
     },
 
     tryLockAspectRatio() {
-        const mobileAspectRatioInput = "{{{ MOBILE_ASPECT_RATIO }}}";
-        const isMobileLocked = !this.isEmpty(mobileAspectRatioInput);
-        const mobileAspectRatio = isMobileLocked ? this.toNumber(mobileAspectRatioInput) : 1.0;
-        console.log("mobileAspectRatio", mobileAspectRatioInput, isMobileLocked, mobileAspectRatio);
+        const mobilePortraitAspectRatio = "{{{ MOBILE_PORTRAIT_ASPECT_RATIO }}}";
+        const mobileLandscapeAspectRatio = "{{{ MOBILE_LANDSCAPE_ASPECT_RATIO }}}";
+        const desktopAspectRatio = "{{{ DESKTOP_ASPECT_RATIO }}}";
 
-        const desktopAspectRatioInput = "{{{ DESKTOP_ASPECT_RATIO }}}";
-        const isDesktopLocked = !this.isEmpty(desktopAspectRatioInput);
-        const desktopAspectRatio = isDesktopLocked ? this.toNumber(desktopAspectRatioInput) : 1.0;
-        console.log("desktopAspectRatio", desktopAspectRatioInput, isDesktopLocked, desktopAspectRatio);
+        const isMobilePortraitLocked = !this.isEmpty(mobilePortraitAspectRatio);
+        const isMobileLandscapeLocked = !this.isEmpty(mobileLandscapeAspectRatio);
+        const isDesktopLocked = !this.isEmpty(desktopAspectRatio);
+
+        console.log('tryLockAspectRatio', {
+            mobilePortraitAspectRatio: mobilePortraitAspectRatio,
+            mobileLandscapeAspectRatio: mobileLandscapeAspectRatio,
+            desktopAspectRatio: desktopAspectRatio,
+            isMobilePortraitLocked: isMobilePortraitLocked,
+            isMobileLandscapeLocked: isMobileLandscapeLocked,
+            isDesktopLocked: isDesktopLocked
+        });
 
         const container = document.querySelector("#unity-container");
         const canvas = document.querySelector("#unity-canvas");
@@ -130,11 +137,15 @@ const unityApp = {
             centerCanvas();
         }
 
-        function recalculateAspectRatio(aspectRatio) {
-            let containerWidth = container.clientWidth;
-            let containerHeight = container.clientHeight;
+        function isPortraitMode() {
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            return containerHeight > containerWidth;
+        }
 
-            // Apply aspect ratio lock with pixel-perfect size.
+        function recalculateAspectRatio(aspectRatio) {
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
             if (containerWidth / containerHeight > aspectRatio) {
                 canvas.style.width = Math.floor(containerHeight * aspectRatio) + "px";
                 canvas.style.height = "100%";
@@ -148,15 +159,20 @@ const unityApp = {
         function updateAspectRatio() {
             resetAspectRatio();
             if (unityApp.isMobile()) {
-                // Mobile
-                if (isMobileLocked) {
-                    recalculateAspectRatio(mobileAspectRatio);
+                if (isPortraitMode()) {
+                    if (isMobilePortraitLocked) {
+                        recalculateAspectRatio(unityApp.toNumber(mobilePortraitAspectRatio));
+                    }
+                }
+                else {
+                    if (isMobileLandscapeLocked) {
+                        recalculateAspectRatio(unityApp.toNumber(mobileLandscapeAspectRatio));
+                    }
                 }
             }
             else {
-                // Desktop
                 if (isDesktopLocked) {
-                    recalculateAspectRatio(desktopAspectRatio);
+                    recalculateAspectRatio(unityApp.toNumber(desktopAspectRatio));
                 }
             }
             centerCanvas();
