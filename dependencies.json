@@ -4,7 +4,8 @@
     {
       "Name": "PrimeGames",
       "Url": "https://github.com/Prime-SDK/PrimeGamesTemplate/archive/refs/heads/main.zip",
-      "SourceFolder": ""
+      "SourceFolder": "",
+      "Version": "1.0.0"
     }
   ]
 }
