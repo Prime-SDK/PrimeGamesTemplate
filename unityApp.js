@@ -191,7 +191,14 @@ const unityApp = {
     startLoading: function () {
         const canvas = document.querySelector("#unity-canvas");
         const loadingBar = document.querySelector("#unity-loading-bar");
-        const progressBarFull = document.querySelector("#unity-progress-bar-full");
+        const loadingLogo = document.querySelector("#unity-logo");
+        const progressPercent = document.querySelector("#unity-progress-percent");
+
+        function updateLoadingProgress(progress) {
+            const clampedProgress = Math.max(0, Math.min(1, progress || 0));
+            loadingLogo.style.setProperty("--unity-loading-progress", `${clampedProgress * 100}%`);
+            progressPercent.textContent = `${Math.round(clampedProgress * 100)}%`;
+        }
 
         const buildUrl = "Build";
         const loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
@@ -259,12 +266,14 @@ const unityApp = {
         }
 
         loadingBar.style.display = "block";
+        updateLoadingProgress(0);
         const script = document.createElement("script");
         script.src = loaderUrl;
         script.onload = () => {
             createUnityInstance(canvas, config, (progress) => {
-                progressBarFull.style.width = 100 * progress + "%";
+                updateLoadingProgress(progress);
             }).then((unityInstance) => {
+                updateLoadingProgress(1);
                 loadingBar.style.display = "none";
 
                 #if SHOW_DIAGNOSTICS

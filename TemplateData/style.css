@@ -66,38 +66,54 @@ img {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    display: none
+    display: none;
+    text-align: center;
 }
 
 #unity-logo {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
+    --unity-loading-progress: 0%;
+    position: relative;
     width: 256px;
     height: 256px;
-    border: 2px solid white;
-    border-bottom: 8px solid white;
+}
+
+#unity-logo-base,
+#unity-logo-fill {
+    position: absolute;
+    inset: 0;
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: cover;
-    background-image: url('../gameIcon.png');
-    border-radius: 5px;
+    background-size: contain;
+    background-image: url('prime-logo-mask.png');
 }
 
-#unity-progress-bar-empty {
-    margin-left: auto;
-    margin-right: auto;
-    width: 256px;
-    height: 18px;
-    margin-top: 10px;
-    background: url('progress_empty_256.png') no-repeat center;
+#unity-logo-base {
+    opacity: 0.28;
 }
 
-#unity-progress-bar-full {
-    width: 0%;
-    height: 18px;
+#unity-logo-fill {
+    background-image: none;
+    background: linear-gradient(180deg, #ffc928 0%, #ff8500 52%, #ff2a14 100%);
+    -webkit-mask-image: url('prime-logo-mask.png');
+    mask-image: url('prime-logo-mask.png');
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center center;
+    mask-position: center center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    clip-path: inset(calc(100% - var(--unity-loading-progress)) 0 0 0);
+    transition: clip-path 120ms linear;
+}
+
+#unity-progress-percent {
     margin-top: 10px;
-    background: url('progress_full_256.png') no-repeat center;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
 }
 
 /* ADAPTATION FOR TOO SMALL DISPLAYS */
@@ -108,14 +124,8 @@ img {
         height: 128px;
     }
 
-    #unity-progress-bar-empty {
-        width: 128px;
-        background: url('progress_empty_128.png') no-repeat center;
-    }
-
-    #unity-progress-bar-full {
-        height: 18px;
-        background: url('progress_full_128.png') no-repeat center;
+    #unity-progress-percent {
+        font-size: 14px;
     }
 
 }
