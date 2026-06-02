@@ -192,12 +192,10 @@ const unityApp = {
         const canvas = document.querySelector("#unity-canvas");
         const loadingBar = document.querySelector("#unity-loading-bar");
         const loadingLogo = document.querySelector("#unity-logo");
-        const progressPercent = document.querySelector("#unity-progress-percent");
 
         function updateLoadingProgress(progress) {
             const clampedProgress = Math.max(0, Math.min(1, progress || 0));
             loadingLogo.style.setProperty("--unity-loading-progress", `${clampedProgress * 100}%`);
-            progressPercent.textContent = `${Math.round(clampedProgress * 100)}%`;
         }
 
         const buildUrl = "Build";

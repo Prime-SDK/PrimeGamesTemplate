@@ -106,26 +106,12 @@ img {
     transition: clip-path 120ms linear;
 }
 
-#unity-progress-percent {
-    margin-top: 10px;
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 1;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
-}
-
 /* ADAPTATION FOR TOO SMALL DISPLAYS */
 @media (max-width: 500px), (max-height: 500px) {
 
     #unity-logo {
         width: 128px;
         height: 128px;
-    }
-
-    #unity-progress-percent {
-        font-size: 14px;
     }
 
 }
