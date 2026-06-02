@@ -24,10 +24,6 @@ html, body {
     background-position: center center;
     background-size: cover;
     background-image: url('../gameBackground.png');
-    background-image: image-set(
-        url('../gameBackground.webp') type('image/webp'),
-        url('../gameBackground.png') type('image/png')
-    );
 }
 
 img {
@@ -89,10 +85,6 @@ img {
     background-position: center center;
     background-size: contain;
     background-image: url('prime-logo-mask.png');
-    background-image: image-set(
-        url('prime-logo-mask.webp') type('image/webp'),
-        url('prime-logo-mask.png') type('image/png')
-    );
 }
 
 #unity-logo-base {
@@ -112,13 +104,6 @@ img {
     mask-size: contain;
     clip-path: inset(calc(100% - var(--unity-loading-progress)) 0 0 0);
     transition: clip-path 120ms linear;
-}
-
-@supports (background-image: image-set(url('prime-logo-mask.webp') type('image/webp'))) {
-    #unity-logo-fill {
-        -webkit-mask-image: url('prime-logo-mask.webp');
-        mask-image: url('prime-logo-mask.webp');
-    }
 }
 
 #unity-progress-percent {
